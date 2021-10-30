@@ -13,6 +13,8 @@ import com.yoti.android.cryptocurrencychallenge.data.model.markets.MarketData
 import com.yoti.android.cryptocurrencychallenge.databinding.FragmentMarketBinding
 import com.yoti.android.cryptocurrencychallenge.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.*
 
 @AndroidEntryPoint
 class MarketFragment : Fragment() {
@@ -68,8 +70,8 @@ class MarketFragment : Fragment() {
         binding.apply {
             textViewExchangeId.text = data.first().exchangeId
             textViewRank.text = data.first().rank
-            textViewPrice.text = data.first().priceUsd
-            textViewDate.text = data.first().updated.toString()
+            textViewPrice.text = String.format("%.2f", data.first().priceUsd?.toDouble())
+            textViewDate.text = viewModel.formatTime(data.first().updated!!)
         }
     }
 }
