@@ -3,19 +3,23 @@ package com.yoti.android.cryptocurrencychallenge.assets
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.yoti.android.cryptocurrencychallenge.data.model.assets.AssetData
 import com.yoti.android.cryptocurrencychallenge.databinding.AssetItemBinding
 
-class AssetsAdapter(private val assetItems: List<AssetUiItem>) :
-        RecyclerView.Adapter<AssetItemViewHolder>() {
+class AssetsAdapter(
+    private val assetItems: List<AssetData>,
+    private val listener: OnItemClickListener
+) :
+    RecyclerView.Adapter<AssetsAdapter.AssetItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AssetItemViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return AssetItemViewHolder(
-                AssetItemBinding.inflate(
-                        inflater,
-                        parent,
-                        false
-                )
+            AssetItemBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
         )
     }
 
@@ -24,14 +28,34 @@ class AssetsAdapter(private val assetItems: List<AssetUiItem>) :
     }
 
     override fun getItemCount() = assetItems.size
-}
 
-class AssetItemViewHolder(private val binding: AssetItemBinding) :
+
+    interface OnItemClickListener {
+        fun onItemClick(asset: AssetData)
+    }
+
+    fun getAsset(position: Int): AssetData = assetItems[position]
+
+
+    inner class AssetItemViewHolder(
+        private val binding: AssetItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(asset: AssetUiItem) {
-        binding.textViewAssetCode.text = asset.symbol
-        binding.textViewAssetName.text = asset.name
-        binding.textViewAssetPrice.text = asset.price
+        init {
+            binding.root.setOnClickListener {
+                val position = bindingAdapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                val asset = getAsset(position)
+                listener.onItemClick(asset)
+                }
+            }
+        }
+
+        fun bind(asset: AssetData) {
+            binding.textViewAssetCode.text = asset.symbol
+            binding.textViewAssetName.text = asset.name
+            binding.textViewAssetPrice.text = asset.priceUsd
+        }
     }
 }
+
