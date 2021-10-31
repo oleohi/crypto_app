@@ -14,8 +14,8 @@ class MarketsViewModel @Inject constructor(
     private val repository: MarketsRepository
 ) : ViewModel() {
 
-    fun getMarkets(apiKey: String, baseId: String) = liveData(Dispatchers.IO) {
-        emit(repository.getMarkets(apiKey, baseId))
+    fun getMarkets(baseId: String) = liveData(Dispatchers.IO) {
+        emit(repository.getMarkets(baseId))
     }
 
     fun formatTime(timestamp: Long): String {

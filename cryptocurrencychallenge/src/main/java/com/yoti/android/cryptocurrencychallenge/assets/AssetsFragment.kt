@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -13,12 +12,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yoti.android.cryptocurrencychallenge.R
-import com.yoti.android.cryptocurrencychallenge.data.API_KEY
-import com.yoti.android.cryptocurrencychallenge.data.CAPCOIN_ENDPOINT_HOST
 import com.yoti.android.cryptocurrencychallenge.data.model.assets.AssetData
 import com.yoti.android.cryptocurrencychallenge.databinding.FragmentAssetsBinding
 import com.yoti.android.cryptocurrencychallenge.utils.Resource
-import com.yoti.android.cryptocurrencychallenge.utils.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -39,6 +35,12 @@ class AssetsFragment : Fragment(), AssetsAdapter.OnItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initRecyclerView()
+        getAssets()
+        collectUiEvents()
+    }
+
+    private fun initRecyclerView() {
         binding.recyclerViewAssets.addItemDecoration(
             DividerItemDecoration(
                 requireContext(),
@@ -46,9 +48,11 @@ class AssetsFragment : Fragment(), AssetsAdapter.OnItemClickListener {
             )
         )
         binding.recyclerViewAssets.layoutManager = LinearLayoutManager(requireContext())
+    }
 
+    private fun getAssets() {
 
-        viewModel.getAssets(API_KEY).observe(viewLifecycleOwner) { assets ->
+        viewModel.getAssets().observe(viewLifecycleOwner) { assets ->
             when (assets) {
                 is Resource.Loading -> binding.progressBarAssets.isVisible = true
 
@@ -71,7 +75,9 @@ class AssetsFragment : Fragment(), AssetsAdapter.OnItemClickListener {
                 }
             }
         }
+    }
 
+    private fun collectUiEvents() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.assetEvent.collect { event ->
                 when (event) {

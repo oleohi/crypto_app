@@ -8,9 +8,9 @@ class AssetsRepository @Inject constructor(
     private val assetsApi: CoincapService
 ) {
 
-    suspend fun getAssets(apiKey: String): Resource<List<AssetData>?> {
+    suspend fun getAssets(): Resource<List<AssetData>?> {
         return try {
-            val response = assetsApi.getAssets(apiKey).assetData
+            val response = assetsApi.getAssets().assetData
             Resource.Success(response)
         } catch (e: Exception) {
             Resource.Error(e)

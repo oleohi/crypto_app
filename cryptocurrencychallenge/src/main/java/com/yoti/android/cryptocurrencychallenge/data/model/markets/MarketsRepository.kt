@@ -8,9 +8,9 @@ import javax.inject.Inject
 class MarketsRepository @Inject constructor(
     private val api: CoincapService
 ) {
-    suspend fun getMarkets(apiKey: String, baseId: String): Resource<List<MarketData>?> {
+    suspend fun getMarkets(baseId: String): Resource<List<MarketData>?> {
         return try {
-            val response = api.getMarkets(apiKey, baseId).marketData
+            val response = api.getMarkets(baseId).marketData
             Resource.Success(response)
         } catch (e: Exception) {
             Resource.Error(e)

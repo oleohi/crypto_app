@@ -18,9 +18,8 @@ class AssetsViewModel @Inject constructor(
     private val repository: AssetsRepository
 ) : ViewModel() {
 
-    fun getAssets(apiKey: String) = liveData(Dispatchers.IO) {
-//        emit(Resource.Loading())
-        emit(repository.getAssets(apiKey))
+    fun getAssets() = liveData(Dispatchers.IO) {
+        emit(repository.getAssets())
     }
 
     private val assetEventChannel = Channel<AssetEvent>()

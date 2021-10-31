@@ -8,13 +8,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.yoti.android.cryptocurrencychallenge.R
-import com.yoti.android.cryptocurrencychallenge.data.API_KEY
 import com.yoti.android.cryptocurrencychallenge.data.model.markets.MarketData
 import com.yoti.android.cryptocurrencychallenge.databinding.FragmentMarketBinding
 import com.yoti.android.cryptocurrencychallenge.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.SimpleDateFormat
-import java.util.*
 
 @AndroidEntryPoint
 class MarketFragment : Fragment() {
@@ -24,8 +21,8 @@ class MarketFragment : Fragment() {
     private lateinit var baseId: String
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         binding = FragmentMarketBinding.inflate(layoutInflater)
         return binding.root
@@ -41,7 +38,11 @@ class MarketFragment : Fragment() {
             baseId = currentAssetId
         }
 
-        viewModel.getMarkets(API_KEY, baseId).observe(viewLifecycleOwner) { markets ->
+        getMarkets()
+    }
+
+    private fun getMarkets() {
+        viewModel.getMarkets(baseId).observe(viewLifecycleOwner) { markets ->
             when (markets) {
                 is Resource.Loading -> binding.progressBarMarkets.isVisible = true
 
